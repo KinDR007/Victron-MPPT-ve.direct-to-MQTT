@@ -1,4 +1,4 @@
-# Victron-MPPT-ve.direct-to-MQTT
+# Victron MPPT ve.direct to MQTT
 
 Read data from victron mppt a transport to mqtt server with esp8266 nodemcu v1
 
