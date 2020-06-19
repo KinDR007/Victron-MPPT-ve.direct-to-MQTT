@@ -51,18 +51,18 @@ int intValue;
 
 
 void setup() {
- // Serial.begin(19200);
+  Serial.begin(115200);
 
   Vser.begin(19200);
 
   // Wait for hardware to initialize
   delay(1000);
-  // Serial.println("Booting");
+  Serial.println("Booting");
   WiFi.mode(WIFI_STA);
   WiFi.hostname(OTA_HOSTNAME);
   WiFi.begin(ssid, password);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    //  Serial.println("Connection Failed! Rebooting...");
+    Serial.println("Connection Failed! Rebooting...");
     delay(5000);
     ESP.restart();
   }
@@ -76,16 +76,16 @@ void setup() {
   //ArduinoOTA.setPassword((const char *)"123");
 
   ArduinoOTA.onStart([]() {
- //   Serial.println("Start");
+    Serial.println("Start");
   });
   ArduinoOTA.onEnd([]() {
- //   Serial.println("\nEnd");
+    Serial.println("\nEnd");
   });
   ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
- //   Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+    Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
   });
   ArduinoOTA.onError([](ota_error_t error) {
- //   Serial.printf("Error[%u]: ", error);
+    //   Serial.printf("Error[%u]: ", error);
     if (error == OTA_AUTH_ERROR) Serial.println("Auth Failed");
     else if (error == OTA_BEGIN_ERROR) Serial.println("Begin Failed");
     else if (error == OTA_CONNECT_ERROR) Serial.println("Connect Failed");
@@ -102,10 +102,11 @@ void setup() {
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
-//    Serial.print("Attempting MQTT connection...");
+    Serial.print("Attempting MQTT connection...");
     // Attempt to connect
     if (client.connect("Victron", mqtt_user, mqtt_pass)) {
-//      Serial.println("connected");
+      Serial.println("connected");
+      client.publish("Victron/Live", "1");
       // Once connected, publish an announcement...
     } else {
       // Wait 5 seconds before retrying
@@ -130,13 +131,106 @@ void loop() {
     char charBufL[label.length() + 1];
     label.toCharArray(charBufL, label.length() + 1);
 
-    if (label == "I")                                       
+    if (label == "PID") {
+
+
+      String WorkingString = val;
+      long A = strtol(WorkingString.c_str(), NULL, 0);
+      WorkingString = String(A);
+
+      switch (A) {
+        case 0x203 : client.publish("Victron/PID", "BMV-700");  break;
+        case 0x204 : client.publish("Victron/PID", "BMV-702");  break;
+        case 0x205 : client.publish("Victron/PID", "BMV-700H");  break;
+        case 0xA381 : client.publish("Victron/PID", "BMV-712 Smart");  break;
+        case 0xA04C : client.publish("Victron/PID", "BlueSolar MPPT 75/10");  break;
+        case 0x300 : client.publish("Victron/PID", "BlueSolar MPPT 70/15");  break;
+        case 0xA042 : client.publish("Victron/PID", "BlueSolar MPPT 75/15");  break;
+        case 0xA043 : client.publish("Victron/PID", "BlueSolar MPPT 100/15");  break;
+        case 0xA044 : client.publish("Victron/PID", "BlueSolar MPPT 100/30 rev1");  break;
+        case 0xA04A : client.publish("Victron/PID", "BlueSolar MPPT 100/30 rev2");  break;
+        case 0xA041 : client.publish("Victron/PID", "BlueSolar MPPT 150/35 rev1");  break;
+        case 0xA04B : client.publish("Victron/PID", "BlueSolar MPPT 150/35 rev2");  break;
+        case 0xA04D : client.publish("Victron/PID", "BlueSolar MPPT 150/45");  break;
+        case 0xA040 : client.publish("Victron/PID", "BlueSolar MPPT 75/50");  break;
+        case 0xA045 : client.publish("Victron/PID", "BlueSolar MPPT 100/50 rev1");  break;
+        case 0xA049 : client.publish("Victron/PID", "BlueSolar MPPT 100/50 rev2");  break;
+        case 0xA04E : client.publish("Victron/PID", "BlueSolar MPPT 150/60");  break;
+        case 0xA046 : client.publish("Victron/PID", "BlueSolar MPPT 150/70");  break;
+        case 0xA04F : client.publish("Victron/PID", "BlueSolar MPPT 150/85");  break;
+        case 0xA047 : client.publish("Victron/PID", "BlueSolar MPPT 150/100");  break;
+        case 0xA050 : client.publish("Victron/PID", "SmartSolar MPPT 250/100");  break;
+        case 0xA051 : client.publish("Victron/PID", "SmartSolar MPPT 150/100");  break;
+        case 0xA052 : client.publish("Victron/PID", "SmartSolar MPPT 150/85");  break;
+        case 0xA053 : client.publish("Victron/PID", "SmartSolar MPPT 75/15");  break;
+        case 0xA054 : client.publish("Victron/PID", "SmartSolar MPPT 75/10");  break;
+        case 0xA055 : client.publish("Victron/PID", "SmartSolar MPPT 100/15");  break;
+        case 0xA056 : client.publish("Victron/PID", "SmartSolar MPPT 100/30");  break;
+        case 0xA057 : client.publish("Victron/PID", "SmartSolar MPPT 100/50");  break;
+        case 0xA058 : client.publish("Victron/PID", "SmartSolar MPPT 150/35");  break;
+        case 0xA059 : client.publish("Victron/PID", "SmartSolar MPPT 150/100 rev2");  break;
+        case 0xA05A : client.publish("Victron/PID", "SmartSolar MPPT 150/85 rev2");  break;
+        case 0xA05B : client.publish("Victron/PID", "SmartSolar MPPT 250/70");  break;
+        case 0xA05C : client.publish("Victron/PID", "SmartSolar MPPT 250/85");  break;
+        case 0xA05D : client.publish("Victron/PID", "SmartSolar MPPT 250/60");  break;
+        case 0xA05E : client.publish("Victron/PID", "SmartSolar MPPT 250/45");  break;
+        case 0xA05F : client.publish("Victron/PID", "SmartSolar MPPT 100/20");  break;
+        case 0xA060 : client.publish("Victron/PID", "SmartSolar MPPT 100/20 48V");  break;
+        case 0xA061 : client.publish("Victron/PID", "SmartSolar MPPT 150/45");  break;
+        case 0xA062 : client.publish("Victron/PID", "SmartSolar MPPT 150/60");  break;
+        case 0xA063 : client.publish("Victron/PID", "SmartSolar MPPT 150/70");  break;
+        case 0xA064 : client.publish("Victron/PID", "SmartSolar MPPT 250/85 rev2");  break;
+        case 0xA065 : client.publish("Victron/PID", "SmartSolar MPPT 250/100 rev2");  break;
+        case 0xA201 : client.publish("Victron/PID", "Phoenix Inverter 12V 250VA 230V");  break;
+        case 0xA202 : client.publish("Victron/PID", "Phoenix Inverter 24V 250VA 230V");  break;
+        case 0xA204 : client.publish("Victron/PID", "Phoenix Inverter 48V 250VA 230V");  break;
+        case 0xA211 : client.publish("Victron/PID", "Phoenix Inverter 12V 375VA 230V");  break;
+        case 0xA212 : client.publish("Victron/PID", "Phoenix Inverter 24V 375VA 230V");  break;
+        case 0xA214 : client.publish("Victron/PID", "Phoenix Inverter 48V 375VA 230V");  break;
+        case 0xA221 : client.publish("Victron/PID", "Phoenix Inverter 12V 500VA 230V");  break;
+        case 0xA222 : client.publish("Victron/PID", "Phoenix Inverter 24V 500VA 230V");  break;
+        case 0xA224 : client.publish("Victron/PID", "Phoenix Inverter 48V 500VA 230V");  break;
+        case 0xA231 : client.publish("Victron/PID", "Phoenix Inverter 12V 250VA 230V");  break;
+        case 0xA232 : client.publish("Victron/PID", "Phoenix Inverter 24V 250VA 230V");  break;
+        case 0xA234 : client.publish("Victron/PID", "Phoenix Inverter 48V 250VA 230V");  break;
+        case 0xA239 : client.publish("Victron/PID", "Phoenix Inverter 12V 250VA 120V");  break;
+        case 0xA23A : client.publish("Victron/PID", "Phoenix Inverter 24V 250VA 120V");  break;
+        case 0xA23C : client.publish("Victron/PID", "Phoenix Inverter 48V 250VA 120V");  break;
+        case 0xA241 : client.publish("Victron/PID", "Phoenix Inverter 12V 375VA 230V");  break;
+        case 0xA242 : client.publish("Victron/PID", "Phoenix Inverter 24V 375VA 230V");  break;
+        case 0xA244 : client.publish("Victron/PID", "Phoenix Inverter 48V 375VA 230V");  break;
+        case 0xA249 : client.publish("Victron/PID", "Phoenix Inverter 12V 375VA 120V");  break;
+        case 0xA24A : client.publish("Victron/PID", "Phoenix Inverter 24V 375VA 120V");  break;
+        case 0xA24C : client.publish("Victron/PID", "Phoenix Inverter 48V 375VA 120V");  break;
+        case 0xA251 : client.publish("Victron/PID", "Phoenix Inverter 12V 500VA 230V");  break;
+        case 0xA252 : client.publish("Victron/PID", "Phoenix Inverter 24V 500VA 230V");  break;
+        case 0xA254 : client.publish("Victron/PID", "Phoenix Inverter 48V 500VA 230V");  break;
+        case 0xA259 : client.publish("Victron/PID", "Phoenix Inverter 12V 500VA 120V");  break;
+        case 0xA25A : client.publish("Victron/PID", "Phoenix Inverter 24V 500VA 120V");  break;
+        case 0xA25C : client.publish("Victron/PID", "Phoenix Inverter 48V 500VA 120V");  break;
+        case 0xA261 : client.publish("Victron/PID", "Phoenix Inverter 12V 800VA 230V");  break;
+        case 0xA262 : client.publish("Victron/PID", "Phoenix Inverter 24V 800VA 230V");  break;
+        case 0xA264 : client.publish("Victron/PID", "Phoenix Inverter 48V 800VA 230V");  break;
+        case 0xA269 : client.publish("Victron/PID", "Phoenix Inverter 12V 800VA 120V");  break;
+        case 0xA26A : client.publish("Victron/PID", "Phoenix Inverter 24V 800VA 120V");  break;
+        case 0xA26C : client.publish("Victron/PID", "Phoenix Inverter 48V 800VA 120V");  break;
+        case 0xA271 : client.publish("Victron/PID", "Phoenix Inverter 12V 1200VA 230V");  break;
+        case 0xA272 : client.publish("Victron/PID", "Phoenix Inverter 24V 1200VA 230V");  break;
+        case 0xA274 : client.publish("Victron/PID", "Phoenix Inverter 48V 1200VA 230V");  break;
+        case 0xA279 : client.publish("Victron/PID", "Phoenix Inverter 12V 1200VA 120V");  break;
+        case 0xA27A : client.publish("Victron/PID", "Phoenix Inverter 24V 1200VA 120V");  break;
+        case 0xA27C : client.publish("Victron/PID", "Phoenix Inverter 48V 1200VA 120V");  break;
+        default:
+          client.publish("Victron/PID", "model not detected ");
+      }
+    }
+    else if (label == "I")
     { // In this case I chose to read charging current
-      val.toCharArray(buf, sizeof(buf));                    
-      float floatValue = atof(buf);                         
-      floatValue = floatValue / 1000;                      
-      dtostrf(floatValue, len, 2, char_current);              
-      client.publish("Victron/Battery current, I", char_current);                  
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 1000;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/Battery current, I", char_current);
     }
     else if (label == "V")
     {
@@ -144,23 +238,25 @@ void loop() {
       float floatValue = atof(buf);
       floatValue = floatValue / 1000;
       dtostrf(floatValue, len, 2, char_current);
-      client.publish("Victron/Battery voltage, V", char_current);                 
+      if (floatValue > 9) {
+        client.publish("Victron/Battery voltage, V", char_current);
+      }
     }
     else if (label == "PPV")
     {
-      val.toCharArray(buf, sizeof(buf));                   
-      floatValue = atof(buf);                               
-      dtostrf(floatValue, len, 0, panel_power);          
+      val.toCharArray(buf, sizeof(buf));
+      floatValue = atof(buf);
+      dtostrf(floatValue, len, 0, panel_power);
       panel_power[len] = ' '; panel_power[len + 1] = 0;
-      client.publish("Victron/Panel power, W", panel_power);                  
+      client.publish("Victron/Panel power, W", panel_power);
     }
     else if (label == "VPV") //Solar
     {
-      val.toCharArray(buf, sizeof(buf));                    
-      float floatValue = atof(buf);                         
-      floatValue = floatValue / 1000;                       
-      dtostrf(floatValue, len, 2, char_current);              
-      client.publish("Victron/Panel voltage", char_current);                  
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 1000;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/Panel voltage", char_current);
     }
     else if (label == "H20")
     {
@@ -169,7 +265,7 @@ void loop() {
       floatValue = floatValue / 100;
       dtostrf(floatValue, len, 2, prod_today);
       prod_today[len] = ' '; prod_today[len + 1] = 0;
-      client.publish("Victron/Yield today, kWh", prod_today);                 
+      client.publish("Victron/Yield today, kWh", prod_today);
     }
     else if (label == "H22")                                                                      //Yield yesterday, kWh
     {
@@ -178,7 +274,7 @@ void loop() {
       floatValue = floatValue / 100;
       dtostrf(floatValue, len, 2, prod_yesterday);
       prod_yesterday[len] = ' '; prod_yesterday[len + 1] = 0;
-      client.publish("Victron/Yield yesterday, kWh", prod_yesterday);                 
+      client.publish("Victron/Yield yesterday, kWh", prod_yesterday);
     }
     else if (label == "H19")                                                                        //-- Yield total, kWh
     {
@@ -187,16 +283,16 @@ void loop() {
       floatValue = floatValue / 100;
       dtostrf(floatValue, len, 2, prod_yesterday);
       prod_yesterday[len] = ' '; prod_yesterday[len + 1] = 0;
-      client.publish("Victron/Yield total, kWh", prod_yesterday);                 
+      client.publish("Victron/Yield total, kWh", prod_yesterday);
     }
-    
+
     else if (label == "H21")                                                                        //Maximum power today, W
     {
       val.toCharArray(buf, sizeof(buf));
       floatValue = atof(buf);
       dtostrf(floatValue, len, 0, max_power_h);
       max_power_h[len] = ' '; max_power_h[len + 1] = 0;
-      client.publish("Victron/Maximum power today, W", max_power_h);                  
+      client.publish("Victron/Maximum power today, W", max_power_h);
 
     }
     else if (label == "H23")                                                                          //Maximum power yesterday, W
@@ -205,7 +301,7 @@ void loop() {
       floatValue = atof(buf);
       dtostrf(floatValue, len, 0, max_power_h);
       max_power_h[len] = ' '; max_power_h[len + 1] = 0;
-      client.publish("Victron/Maximum power yesterday, W", max_power_h);                 
+      client.publish("Victron/Maximum power yesterday, W", max_power_h);
 
     }
     else if (label == "FW")                                                                           //FW 119     -- Firmware version of controller, v1.19
@@ -215,7 +311,7 @@ void loop() {
       floatValue = floatValue / 100;
       dtostrf(floatValue, len, 2, prod_today);
       prod_today[len] = ' '; prod_today[len + 1] = 0;
-      client.publish("Victron/Firmware version", prod_today);                  
+      client.publish("Victron/Firmware version", prod_today);
 
     }
     else if (label == "HSDS")                                                                         //Day sequence number (0..364)
@@ -231,17 +327,12 @@ void loop() {
     {
       val.toCharArray(buf, sizeof(buf));
       intValue = atof(buf);
-      if (intValue == 0)
-      {
-        client.publish("Victron/Tracker operation", "Off");
-      }
-      else if (intValue == 1)
-      {
-        client.publish("Victron/Tracker operation", "Limited");
-      }
-      else if (intValue == 2)
-      {
-        client.publish("Victron/Tracker operation", "Active");
+      switch (intValue) {
+        case 0 : client.publish("Victron/Tracker operation", "Off"); break;
+        case 1 : client.publish("Victron/Tracker operation", "Limited"); break;
+        case 2 : client.publish("Victron/Tracker operation", "Active"); break;
+        default:
+          client.publish("Victron/Tracker operation", "Tracker operation not detected  !! ");
       }
 
     }
@@ -250,85 +341,29 @@ void loop() {
 
       val.toCharArray(buf, sizeof(buf));
       intValue = atoi(buf);
-      if (intValue == 0)
-      {
-        client.publish("Victron/Error code", "No error");
-      }
-      else if (intValue == 2)
-      {
-        client.publish("Victron/Error code", "Battery voltage too high"); //'2': 'Battery voltage too high',
-      }
-      else if (intValue == 17)  // '17': 'Charger temperature too high',
-      {
-        client.publish("Victron/Error code", "Charger temperature too high");
-      }
-      else if (intValue == 18)  //'18': 'Charger over current',
-      {
-        client.publish("Victron/Error code", "Charger over current");
-      }
-      else if (intValue == 19)  // '19': 'Charger current reversed',
-      {
-        client.publish("Victron/Error code", "Charger current reversed");
-      }
-      else if (intValue == 20)  //'20': 'Bulk time limit exceeded',
-      {
-        client.publish("Victron/Error code", "Bulk time limit exceeded");
-      }
-      else if (intValue == 21)  //     '21': 'Current sensor issue',
-      {
-        client.publish("Victron/Error code", "Current sensor issue");
-      }
-      else if (intValue == 26)  //'26': 'Terminals overheated',
-      {
-        client.publish("Victron/Error code", "Terminals overheated");
-      }
-      else if (intValue == 28)  // '28': 'Converter issue',  # (dual converter models only)
-      {
-        client.publish("Victron/Error code", "Converter issue");
-      }
-      else if (intValue == 33)  //  '33': 'Input voltage too high (solar panel)',
-      {
-        client.publish("Victron/Error code", "Input voltage too high (solar panel)");
-      }
-      else if (intValue == 34)  //   '34': 'Input current too high (solar panel)',
-      {
-        client.publish("Victron/Error code", "Input current too high (solar panel)");
-      }
-      else if (intValue == 38)  //    '38': 'Input shutdown (excessive battery voltage)',
-      {
-        client.publish("Victron/Error code", "Input shutdown (excessive battery voltage)");
-      }
-      else if (intValue == 39)  //        '39': 'Input shutdown (due to current flow during off mode)',
-      {
-        client.publish("Victron/Error code", "Input shutdown (due to current flow during off mode)");
-      }
-      else if (intValue == 65)  //        '65': 'Lost communication with one of devices',
-      {
-        client.publish("Victron/Error code", "Lost communication with one of devices");
-      }
-      else if (intValue == 66)  //     '66': 'Synchronised charging device configuration issue',
-      {
-        client.publish("Victron/Error code", "Synchronised charging device configuration issue");
-      }
-      else if (intValue == 67)  //    '67': 'BMS connection lost',
-      {
-        client.publish("Victron/Error code", "BMS connection lost");
-      }
-      else if (intValue == 68)  //     '68': 'Network misconfigured',
-      {
-        client.publish("Victron/Error code", "Network misconfigured");
-      }
-      else if (intValue == 116)  //    '116': 'Factory calibration data lost',
-      {
-        client.publish("Victron/Error code", "Factory calibration data lost");
-      }
-      else if (intValue == 117)  //        '117': 'Invalid/incompatible firmware',
-      {
-        client.publish("Victron/Error code", "Invalid/incompatible firmware");
-      }
-      else if (intValue == 119)  //    '119': 'User settings invalid'
-      {
-        client.publish("Victron/Error code", "User settings invalid");
+      switch (intValue) {
+        case 0: client.publish("Victron/Error code", "No error"); break;
+        case 2: client.publish("Victron/Error code", "Battery voltage too high"); break;
+        case 17: client.publish("Victron/Error code", "Charger temperature too high"); break;
+        case 18: client.publish("Victron/Error code", "Charger over current"); break;
+        case 19: client.publish("Victron/Error code", "Charger current reversed"); break;
+        case 20: client.publish("Victron/Error code", "Bulk time limit exceeded"); break;
+        case 21: client.publish("Victron/Error code", "Current sensor issue"); break;
+        case 26: client.publish("Victron/Error code", "Terminals overheated"); break;
+        case 28: client.publish("Victron/Error code", "Converter issue"); break;
+        case 33: client.publish("Victron/Error code", "Input voltage too high (solar panel)"); break;
+        case 34: client.publish("Victron/Error code", "Input current too high (solar panel)"); break;
+        case 38: client.publish("Victron/Error code", "Input shutdown (excessive battery voltage)"); break;
+        case 39: client.publish("Victron/Error code", "Input shutdown (due to current flow during off mode)"); break;
+        case 65: client.publish("Victron/Error code", "Lost communication with one of devices"); break;
+        case 66: client.publish("Victron/Error code", "Synchronised charging device configuration issue"); break;
+        case 67: client.publish("Victron/Error code", "BMS connection lost"); break;
+        case 68: client.publish("Victron/Error code", "Network misconfigured"); break;
+        case 116: client.publish("Victron/Error code", "Factory calibration data lost"); break;
+        case 117: client.publish("Victron/Error code", "Invalid/incompatible firmware"); break;
+        case 119: client.publish("Victron/Error code", "User settings invalid"); break;
+        default:
+          client.publish("Victron/Error code", "ERROR CODE not detected  !! ");
       }
 
     }
@@ -337,44 +372,19 @@ void loop() {
 
       val.toCharArray(buf, sizeof(buf));
       intValue = atoi(buf);
-      if (intValue == 0)
-      {
-        client.publish("Victron/Charge state", "Off");
+      switch (intValue) {
+        case 0 : client.publish("Victron/Charge state", "Off"); break;
+        case 2 : client.publish("Victron/Charge state", "Fault"); break;
+        case 3 : client.publish("Victron/Charge state", "Bulk"); break;
+        case 4 : client.publish("Victron/Charge state", "Absorption"); break;
+        case 5 : client.publish("Victron/Charge state", "Float"); break;
+        case 7 : client.publish("Victron/Charge state", "Equalize (manual)"); break;
+        case 245 : client.publish("Victron/Charge state", "Starting-up"); break;
+        case 247 : client.publish("Victron/Charge state", "Auto equalize / Recondition"); break;
+        case 252 : client.publish("Victron/Charge state", "External control"); break;
+        default:
+          client.publish("Victron/Charge state", "Charge state not detected  !! ");
       }
-      else if (intValue == 2)
-      {
-        client.publish("Victron/Charge state", "Fault");
-      }
-      else if (intValue == 3)
-      {
-        client.publish("Victron/Charge state", "Bulk");
-      }
-      else if (intValue == 4)
-      {
-        client.publish("Victron/Charge state", "Absorption");
-      }
-      else if (intValue == 5)
-      {
-        client.publish("Victron/Charge state", "Float");
-      }
-      else if (intValue == 7)
-      {
-        client.publish("Victron/Charge state", "Equalize (manual)");
-      }
-      else if (intValue == 245)
-      {
-        client.publish("Victron/Charge state", "Starting-up");
-      }
-      else if (intValue == 247)
-      {
-        client.publish("Victron/Charge state", "Auto equalize / Recondition");
-      }
-      else if (intValue == 252)
-      {
-        client.publish("Victron/Charge state", "External control");
-      }
-
     }
   }
-
 }
