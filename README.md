@@ -65,4 +65,10 @@ Home Assitant example config
        unique_id: sensor.text.victron.yield.total
        icon: mdi:gauge  
        unit_of_measurement: "Kw/h"
+       
+     - platform: mqtt
+       name: "Victron Charge state"
+       state_topic: "Victron/Charge state"
+       unique_id: sensor.text.victron.charge.state
+       icon: mdi:mdi-solar-power
 ```
