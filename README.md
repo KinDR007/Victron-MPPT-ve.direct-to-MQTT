@@ -6,7 +6,7 @@ Home Assistant dashboard
 ![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/HA.png?raw=true)
 
 
-![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/MQTTExplorerVitronToMQTT.png?raw=true)
+![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/MQTTExplorerVictronToMQTT.png?raw=true)
 
 Home Assitant example config
 
@@ -65,4 +65,10 @@ Home Assitant example config
        unique_id: sensor.text.victron.yield.total
        icon: mdi:gauge  
        unit_of_measurement: "Kw/h"
+       
+     - platform: mqtt
+       name: "Victron Charge state"
+       state_topic: "Victron/Charge state"
+       unique_id: sensor.text.victron.charge.state
+       icon: mdi:mdi-solar-power
 ```
