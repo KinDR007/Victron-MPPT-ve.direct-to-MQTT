@@ -1,6 +1,7 @@
 # Victron MPPT ve.direct to MQTT
 
-Read data from victron mppt and transport to mqtt server with esp8266 nodemcu v1
+
+Read data from #victron mppt charger and transport to #mqtt server with esp8266 nodemcu v1
 
 Home Assistant dashboard
 ![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/HA.png?raw=true)
