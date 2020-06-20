@@ -8,6 +8,20 @@ Home Assistant dashboard
 
 ![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/MQTTExplorerVictronToMQTT.png?raw=true)
 
+
+Set params in config.h
+```
+const char* ssid = "SSID";
+const char* password = "password_to_your_wifi";
+const char* mqtt_server = "ip_adress_to_MQTT_server eg.192.168.1.201";
+const char* mqtt_user = ""; //username to mqtt leave blank if you dont use username 
+const char* mqtt_pass = ""; //password to mqtt leave blank if you dont use password 
+
+#define OTA_HOSTNAME                    "VictronMPPT" // name of esp8266 in LAN 
+#define MQTT_ROOT                       "Victron"
+```
+
+
 Home Assitant example config
 
 ```
