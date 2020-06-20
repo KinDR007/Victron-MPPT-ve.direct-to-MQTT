@@ -93,4 +93,4 @@ Home Assitant example config
 
 
 #Victron MPPT pinout
-![alt text](https://beta.ivc.no/wiki/images/f/fc/Victron_cable_unit_pinout.jpg?raw=true)
+![alt text](https://beta.ivc.no/wiki/images/archive/f/fc/20180102133304%21Victron_cable_unit_pinout.jpg?raw=true)
