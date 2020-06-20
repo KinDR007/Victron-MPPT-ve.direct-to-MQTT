@@ -87,3 +87,10 @@ Home Assitant example config
        unique_id: sensor.text.victron.charge.state
        icon: mdi:mdi-solar-power
 ```
+
+#NodeMCU pinout and wirring
+![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/nodemcu.png?raw=true)
+
+
+#Victron MPPT pinout
+![alt text](https://beta.ivc.no/wiki/images/f/fc/Victron_cable_unit_pinout.jpg?raw=true)
