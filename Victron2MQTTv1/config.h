@@ -5,5 +5,4 @@ const char* mqtt_user = "";                           //mqtt user name
 const char* mqtt_pass = "";                           //mqtt password
 
 #define OTA_HOSTNAME                    "VictronMPPT"
-#define EPSOLAR_DEVICE_ID    1
 #define MQTT_ROOT                       "Victron"
