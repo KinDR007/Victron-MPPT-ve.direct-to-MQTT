@@ -92,5 +92,4 @@ Home Assitant example config
 ![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/nodemcu.png?raw=true)
 
 
-#Victron MPPT pinout
-![alt text](https://beta.ivc.no/wiki/images/f/fc/Victron_cable_unit_pinout.jpg?raw=true)
+
