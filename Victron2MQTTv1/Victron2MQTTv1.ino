@@ -142,6 +142,7 @@ void loop() {
         case 0x203 : client.publish("Victron/PID", "BMV-700");  break;
         case 0x204 : client.publish("Victron/PID", "BMV-702");  break;
         case 0x205 : client.publish("Victron/PID", "BMV-700H");  break;
+        case 0xA389 : client.publish("Victron/PID", "SmartShunt");  break;
         case 0xA381 : client.publish("Victron/PID", "BMV-712 Smart");  break;
         case 0xA04C : client.publish("Victron/PID", "BlueSolar MPPT 75/10");  break;
         case 0x300 : client.publish("Victron/PID", "BlueSolar MPPT 70/15");  break;
