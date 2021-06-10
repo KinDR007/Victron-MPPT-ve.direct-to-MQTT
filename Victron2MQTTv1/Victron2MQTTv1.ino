@@ -337,6 +337,56 @@ void loop() {
       }
 
     }
+    // Adding BVM 712 support
+    
+    else if (label == "SOC") // State Of Charge of the battery
+    { 
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 10;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/SOC", char_current);
+    }
+    else if (label == "TTG") // Time To Go in decimal hours
+    {
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 60;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/ttg", char_current);
+    }
+    else if (label == "P") // Instant power
+    {
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/Power", char_current);
+    
+    }
+    else if (label == "CE") //Consumption of engery in A/h
+    { 
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 1000;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/AH", char_current);
+    }
+    else if (label == "H17") // Total discharged enery from the first power on in kWh
+    {
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 100;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/discharged, kWh", char_current);
+    }
+    else if (label == "H18") // Total charged enery from the first power on in kWh
+    {
+      val.toCharArray(buf, sizeof(buf));
+      float floatValue = atof(buf);
+      floatValue = floatValue / 100;
+      dtostrf(floatValue, len, 2, char_current);
+      client.publish("Victron/charged", char_current);
+    }
     else if (label == "ERR")                               // This routine reads the error code.
     {
 
