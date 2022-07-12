@@ -93,6 +93,14 @@ Home Assitant example config
 #NodeMCU pinout and wirring
 ![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/nodemcu.png?raw=true)
 
+> **Warning**
+>
+> Be aware of 5V vs 3V!
+>
+> MPPTs deliver 5V RX signals, therefore you need a voltage divider for MCU's TX pins.
+>
+> Check Victron's manuals if you are in doubt.
+
 
 
 <a href="https://www.buymeacoffee.com/kindr007"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=kindr007&button_colour=5F7FFF&font_colour=ffffff&font_family=Cookie&outline_colour=000000&coffee_colour=FFDD00"></a>
