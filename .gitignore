@@ -1,3 +1,8 @@
+# File created using '.gitignore Generator' for Visual Studio Code: https://bit.ly/vscode-gig
+# Created by https://www.toptal.com/developers/gitignore/api/c++,platformio
+# Edit at https://www.toptal.com/developers/gitignore?templates=c++,platformio
+
+### C++ ###
 # Prerequisites
 *.d
 
@@ -30,6 +35,17 @@
 *.exe
 *.out
 *.app
-Victron2MQTTv1.1/.DS_Store
-Victron2MQTTv1.1/Victron2MQTTv1/config.h
-Victron2MQTTv1.1/Victron2MQTTv1/.DS_Store
+
+### PlatformIO ###
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
+.pio
+
+# End of https://www.toptal.com/developers/gitignore/api/c++,platformio
+
+# Custom rules (everything added below won't be overriden by 'Generate .gitignore File' if you use 'Update' option)
+config.h
+.vscode
+.DS_Store
