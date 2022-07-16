@@ -20,17 +20,15 @@
 
 #include "config.h"
 #include <WiFiUdp.h>
-#include <ESP8266WiFi.h>
-#include <ESP8266mDNS.h>
+#include <WiFi.h>
+#include <mDNS.h>
 #include <ArduinoOTA.h>
 #include <PubSubClient.h>
-#include <SoftwareSerial.h>
+
 #include "VeDirectFrameHandler.h"
 
 VeDirectFrameHandler myve;
-
-// SoftwareSerial
-SoftwareSerial Vser(rxPin, txPin);       
+  
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -46,8 +44,8 @@ void ReadVEData();
 void setup() {
   Serial.begin(115200);
 
-  Vser.begin(19200);
-  Vser.flush();
+  Serial2.begin(19200, SERIAL_8N1, rxPin, txPin);
+  /*Serial2.flush();*/
 
   // Wait for hardware to initialize
   delay(1000);
@@ -62,7 +60,7 @@ void setup() {
   }
 
   // Port defaults to 8266
-  ArduinoOTA.setPort(8266);
+  // ArduinoOTA.setPort(8266);
   // Hostname defaults to esp8266-[ChipID]
   ArduinoOTA.setHostname(OTA_HOSTNAME);
 
@@ -90,7 +88,9 @@ void setup() {
   client.setServer(mqtt_server, 1883);
   client.publish("Victron/Live", "0");
 
-
+  Serial.println("Ready");
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
 }
 
 void reconnect() {
@@ -113,7 +113,6 @@ void reconnect() {
 void loop() {
 
   ArduinoOTA.handle();
-  Serial.println("+");
   if (!client.connected()) {
     reconnect();
   }
@@ -124,8 +123,8 @@ void loop() {
 }
 
 void ReadVEData() {
-    while ( Vser.available() ) {
-        myve.rxData(Vser.read());
+  while ( Serial2.available() ) {
+        myve.rxData(Serial2.read());
     }
     yield();
 }

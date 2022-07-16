@@ -7,6 +7,7 @@
  * 
  * Copyright (c) 2019 Victron Energy BV
  * Portions Copyright (C) 2020 Chris Terwilliger
+ * https://github.com/cterwilliger/VeDirectFrameHandler
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal

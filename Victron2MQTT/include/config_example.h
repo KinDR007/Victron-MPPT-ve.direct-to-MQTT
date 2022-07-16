@@ -8,8 +8,8 @@ const char* mqtt_server = "192.168.0.10";             //ip to mqtt server
 const char* mqtt_user = "";                           //mqtt user name
 const char* mqtt_pass = "";                           //mqtt password
 
-#define rxPin  D1                            // RX using Software Serial so we can use the hardware UART to check the ouput
-#define txPin  D2                            // TX Not used
+const int rxPin = 22;                      // RX using Software Serial so we can use the hardware UART to check the ouput
+const int txPin = 21;                      // TX Not used
 
 #define OTA_HOSTNAME                    "VictronMPPT"
 #define MQTT_ROOT                       "Victron"
