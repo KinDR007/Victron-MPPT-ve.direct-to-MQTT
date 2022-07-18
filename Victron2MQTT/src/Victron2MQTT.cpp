@@ -39,25 +39,47 @@ void PublishData();
 void EverySecond();
 void ReadVEData();
 
+void initWiFi() {
+  WiFi.mode(WIFI_STA);
+  WiFi.hostname(OTA_HOSTNAME);
+  WiFi.begin(ssid, password);
+  Serial.print("Connecting to WiFi ..");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.println("Connection Failed! Rebooting...");
+    delay(5000);
+    ESP.restart();
+  }
+  Serial.print("IP address: ");
+  Serial.println(WiFi.localIP());
+}
 
+unsigned long previousMillis = 0;
+unsigned long interval = 30000;
+
+void reconnectWifi() {
+  // check wifi
+  unsigned long currentMillis = millis();
+  // if WiFi is down, try reconnecting every CHECK_WIFI_TIME seconds
+  if ((WiFi.status() != WL_CONNECTED) && (currentMillis - previousMillis >=interval)) {
+    Serial.print(millis());
+    Serial.println("Reconnecting to WiFi...");
+    WiFi.disconnect();
+    WiFi.reconnect();
+    previousMillis = currentMillis;
+  }
+}
 
 void setup() {
   Serial.begin(115200);
 
   Serial2.begin(19200, SERIAL_8N1, rxPin, txPin);
-  /*Serial2.flush();*/
+  Serial2.flush();
 
   // Wait for hardware to initialize
   delay(1000);
   Serial.println("Booting");
-  WiFi.mode(WIFI_STA);
-  WiFi.hostname(OTA_HOSTNAME);
-  WiFi.begin(ssid, password);
-  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
-    Serial.println("Connection Failed! Rebooting...");
-    delay(5000);
-    ESP.restart();
-  }
+ 
+  initWiFi();
 
   // Port defaults to 8266
   // ArduinoOTA.setPort(8266);
@@ -89,12 +111,12 @@ void setup() {
   client.publish("Victron/Live", "0");
 
   Serial.println("Ready");
-  Serial.print("IP address: ");
-  Serial.println(WiFi.localIP());
 }
 
-void reconnect() {
-  // Loop until we're reconnected
+
+
+void reconnectMQTT() {
+  // Loop until we're reconnected to mqtt broker
   while (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
@@ -111,15 +133,19 @@ void reconnect() {
 
 
 void loop() {
-
-  ArduinoOTA.handle();
-  if (!client.connected()) {
-    reconnect();
+  if (WiFi.status() != WL_CONNECTED) {
+    reconnectWifi();
   }
-  client.loop();
+  else {
+    ArduinoOTA.handle();
+    if (!client.connected()) {
+      reconnectMQTT();
+    }
+    client.loop();
 
-  ReadVEData();
-  EverySecond();
+    ReadVEData();
+    EverySecond();
+  }
 }
 
 void ReadVEData() {
