@@ -140,12 +140,14 @@ void EverySecond() {
 
 
 void PublishData() {
-    String topic = "Victron/";
+    String topic = "";
     for ( int i = 0; i < myve.veEnd; i++ ) {
       Serial.print(myve.veName[i]);
       Serial.print("= ");
-      Serial.println(myve.veValue[i]);     
+      Serial.println(myve.veValue[i]);   
+      topic = "Victron/";  
       topic.concat(myve.veName[i]);
+      topic.replace("#",""); // # is a no go in mqtt topic
       client.publish(topic.c_str(), myve.veValue[i]); 
   }
 }
