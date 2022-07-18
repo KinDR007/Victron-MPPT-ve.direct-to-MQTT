@@ -44,7 +44,7 @@ void initWiFi() {
   WiFi.hostname(OTA_HOSTNAME);
   WiFi.begin(ssid, password);
   Serial.print("Connecting to WiFi ..");
-  while (WiFi.status() != WL_CONNECTED) {
+  while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.println("Connection Failed! Rebooting...");
     delay(5000);
     ESP.restart();
@@ -53,10 +53,11 @@ void initWiFi() {
   Serial.println(WiFi.localIP());
 }
 
-unsigned long previousMillis = 0;
-unsigned long interval = 30000;
+
 
 void reconnectWifi() {
+  static unsigned long previousMillis = 0;
+  const unsigned long interval = 30000;
   // check wifi
   unsigned long currentMillis = millis();
   // if WiFi is down, try reconnecting every CHECK_WIFI_TIME seconds
@@ -117,17 +118,14 @@ void setup() {
 
 void reconnectMQTT() {
   // Loop until we're reconnected to mqtt broker
-  while (!client.connected()) {
+  if  (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
     if (client.connect("Victron", mqtt_user, mqtt_pass)) {
       Serial.println("connected");
       client.publish("Victron/Live", "1");
       // Once connected, publish an announcement...
-    } else {
-      // Wait 5 seconds before retrying
-      delay(5000);
-    }
+    } 
   }
 }
 
@@ -136,16 +134,15 @@ void loop() {
   if (WiFi.status() != WL_CONNECTED) {
     reconnectWifi();
   }
-  else {
-    ArduinoOTA.handle();
-    if (!client.connected()) {
-      reconnectMQTT();
-    }
-    client.loop();
-
-    ReadVEData();
-    EverySecond();
+  ArduinoOTA.handle();
+  if (!client.connected()) {
+    reconnectMQTT();
   }
+  client.loop();
+
+  ReadVEData();
+  EverySecond();
+  
 }
 
 void ReadVEData() {
@@ -156,7 +153,7 @@ void ReadVEData() {
 }
 
 void EverySecond() {
-    static unsigned long prev_millis;
+    static unsigned long prev_millis = 0;
 
     if (millis() - prev_millis > 1000) {
         PublishData();
