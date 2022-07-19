@@ -198,7 +198,9 @@ void PublishData() {
  
       // publish only changed key, values pairs
       if (bChanged) {
-        topic = MQTT_ROOT + "/" + key;  
+        topic = MQTT_ROOT;
+        topic.concat("/"); 
+        topic.concat(key);  
         topic.replace("#",""); // # is a no go in mqtt topic
         client.publish(topic.c_str(), value.c_str()); 
       }
