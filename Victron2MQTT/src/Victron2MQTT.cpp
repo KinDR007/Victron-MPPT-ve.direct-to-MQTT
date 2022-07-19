@@ -24,6 +24,7 @@
 #include <mDNS.h>
 #include <ArduinoOTA.h>
 #include <PubSubClient.h>
+#include <map>
 
 #include "VeDirectFrameHandler.h"
 
@@ -82,7 +83,7 @@ void setup() {
  
   initWiFi();
 
-  // Port defaults to 8266
+  // Port defaults to 8266 on esp8266  or 3232 on esp32
   // ArduinoOTA.setPort(8266);
   // Hostname defaults to esp8266-[ChipID]
   ArduinoOTA.setHostname(OTA_HOSTNAME);
@@ -163,14 +164,41 @@ void EverySecond() {
 
 
 void PublishData() {
+    static 	std::map<String, String> m;
+    String key;
+    String value;
+    bool bChanged;
+
     String topic = "";
     for ( int i = 0; i < myve.veEnd; i++ ) {
-      Serial.print(myve.veName[i]);
+      key = myve.veName[i];
+      value = myve.veValue[i];
+      
+      // just for debug
+      Serial.print(key.c_str());
       Serial.print("= ");
-      Serial.println(myve.veValue[i]);   
-      topic = "Victron/";  
-      topic.concat(myve.veName[i]);
-      topic.replace("#",""); // # is a no go in mqtt topic
-      client.publish(topic.c_str(), myve.veValue[i]); 
+      Serial.println(value.c_str()); 
+
+      // Test if key is already in map
+      auto a = m.find(key);
+      if (a !=  m.end()) {
+        if (m[key] == value) {
+          bChanged = false;
+        }
+        else {
+          m[key] = value;
+          bChanged = true;
+        }
+      }
+      else {	
+        m.insert(std::make_pair(key, value));
+        bChanged = true;
+      }
+ 
+      if (bChanged) {
+        topic = "Victron/" + key;  
+        topic.replace("#",""); // # is a no go in mqtt topic
+        client.publish(topic.c_str(), value.c_str()); 
+      }
   }
 }
