@@ -2,20 +2,20 @@
  ReadVeDirectFrameHandler
  Uses VeDirectFrameHandler library
 
- This example and library tested with Wemod D1 using Software Serial.
- If using with a platform containing 2 harware UART's, use those, not SoftwareSerial.
+ This example and library tested with Wemod D1 esp32 using Hardware Serial.
  Tested with Victron MPPT 100/30.
 
  VEDirect Device:
    pin 1 - gnd
-   pin 2 - RX
-   pin 3 - TX
-   pin 4 - not connected
+   pin 2 - RX not used
+   pin 3 - TX 
+   pin 4 - VCC (5V) not connected
 
-  Be aware that MPPTs use 5V signaling. So you might need a voltage divider for the 3,3 V input pins of the board
+  Be aware that MPPTs use 5V signaling. So you might need a voltage divider / level shifter for the 3,3 V input pins of the board
 
  History:
    2022.07.13 - 0.1 - initial release
+   2022-07.19 - 0.2 - reconnect on wifi lost, send only changed key, value pairs
 **************************************************************************************/
 
 #include "config.h"
@@ -118,7 +118,7 @@ void setup() {
 
 
 void reconnectMQTT() {
-  // Loop until we're reconnected to mqtt broker
+  // Try to reconnected to mqtt broker
   if  (!client.connected()) {
     Serial.print("Attempting MQTT connection...");
     // Attempt to connect
@@ -179,7 +179,8 @@ void PublishData() {
       Serial.print("= ");
       Serial.println(value.c_str()); 
 
-      // Test if key is already in map
+      // Add new key, value pairs to map and update changed values.
+      // Mark changed values
       auto a = m.find(key);
       if (a !=  m.end()) {
         if (m[key] == value) {
@@ -195,8 +196,9 @@ void PublishData() {
         bChanged = true;
       }
  
+      // publish only changed key, values pairs
       if (bChanged) {
-        topic = "Victron/" + key;  
+        topic = MQTT_ROOT + "/" + key;  
         topic.replace("#",""); // # is a no go in mqtt topic
         client.publish(topic.c_str(), value.c_str()); 
       }

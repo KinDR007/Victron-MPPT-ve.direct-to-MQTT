@@ -12,15 +12,18 @@ Home Assistant dashboard
 ![alt text](https://github.com/KinDR007/Victron-MPPT-ve.direct-to-MQTT/blob/master/MQTTExplorerVictronToMQTT.png?raw=true)
 
 
-Set params in config.h
+Copy config_example.h to config.h and set params in config.h
 ```
 const char* ssid = "SSID";
-const char* password = "password_to_your_wifi";
-const char* mqtt_server = "ip_adress_to_MQTT_server eg.192.168.1.201";
-const char* mqtt_user = ""; //username to mqtt leave blank if you dont use username 
-const char* mqtt_pass = ""; //password to mqtt leave blank if you dont use password 
+const char* password = "hidden_password_to_my_wifi";  //password to wifi
+const char* mqtt_server = "192.168.0.10";             //ip to mqtt server
+const char* mqtt_user = "";                           //mqtt user name
+const char* mqtt_pass = "";                           //mqtt password
 
-#define OTA_HOSTNAME                    "VictronMPPT" // name of esp8266 in LAN 
+#define rxPin  D1                            // RX using Software Serial so we can use the hardware UART to check the ouput
+#define txPin  D2                            // TX Not used
+
+#define OTA_HOSTNAME                    "VictronMPPT"
 #define MQTT_ROOT                       "Victron"
 ```
 
@@ -97,7 +100,7 @@ Home Assitant example config
 >
 > Be aware of 5V vs 3V!
 >
-> MPPTs deliver 5V RX signals, therefore you need a voltage divider for MCU's TX pins.
+> MPPTs deliver 5V TX signals, therefore you need a voltage divider or level shipfter for MCU's RX pins.
 >
 > Check Victron's manuals if you are in doubt.
 
